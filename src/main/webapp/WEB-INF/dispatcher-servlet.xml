@@ -17,37 +17,47 @@
         http://www.springframework.org/schema/jdbc
         http://www.springframework.org/schema/jdbc/spring-jdbc.xsd">
 
-    <!-- 컴포넌트 스캔: @Controller, @Service, @Repository 등 탐색 -->
+    <!-- 1) 컴포넌트 스캔 -->
     <context:component-scan base-package="com.sinsin.ssLibrary"/>
+    <mvc:annotation-driven/>
 
-    <!-- ViewResolver 설정: 뷰 이름 앞뒤로 경로를 붙여서 JSP 파일 찾아감 -->
+    <!-- 2) 뷰리졸버 -->
     <bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
         <property name="prefix" value="/WEB-INF/views/"/>
         <property name="suffix" value=".jsp"/>
     </bean>
 
-    <!-- application.properties -->
+    <!-- 3) 프로퍼티 불러오기 -->
     <context:property-placeholder location="classpath:application.properties"/>
 
-    <!-- 1. DataSource 설정 -->
-    <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
+    <!-- 4) DataSource (DBCP2) -->
+    <bean id="dataSource" class="org.apache.commons.dbcp2.BasicDataSource">
         <property name="driverClassName" value="${jdbc.driver}"/>
-        <property name="url" value="${jdbc.url}"/>
-        <property name="username" value="${jdbc.username}"/>
-        <property name="password" value="${jdbc.password}"/>
+        <property name="url"             value="${jdbc.url}"/>
+        <property name="username"        value="${jdbc.username}"/>
+        <property name="password"        value="${jdbc.password}"/>
+        <!-- 풀 사이즈 튜닝(예시) -->
+        <property name="maxTotal" value="20"/>
+        <property name="maxIdle"  value="10"/>
     </bean>
 
-    <!-- 2. SqlSessionFactoryBean 설정 -->
+    <!-- 5) 트랜잭션 매니저 (선택) -->
+    <bean id="txManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="dataSource"/>
+    </bean>
+    <tx:annotation-driven transaction-manager="txManager"/>
+
+    <!-- 6) SqlSessionFactoryBean -->
     <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
         <property name="dataSource" ref="dataSource"/>
         <property name="configLocation" value="classpath:mybatis-config.xml"/>
+        <property name="mapperLocations" value="classpath:mapper/*.xml"/>
+        <!-- 패키지 내 VO를 별칭으로 등록 -->
+        <property name="typeAliasesPackage" value="com.sinsin.ssLibrary.vo"/>
     </bean>
 
-    <!-- 3. Mapper 파일 위치 등록 (resources 아래에 mapper 폴더를 만들 예정) -->
+    <!-- 7) Mapper 인터페이스 스캔 -->
     <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
-        <property name="basePackage" value="com.sinsin.sslibrary.mapper"/>
+        <property name="basePackage" value="com.sinsin.ssLibrary.dao"/>
     </bean>
-
-    <!-- 어노테이션 기반 MVC 활성화 -->
-    <mvc:annotation-driven/>
 </beans>
