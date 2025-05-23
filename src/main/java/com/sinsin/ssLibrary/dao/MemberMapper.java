@@ -4,6 +4,8 @@ import com.sinsin.ssLibrary.vo.Member;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
+import java.util.List;
+
 /**
  * Member 테이블과 매핑되는 MyBatis Mapper 인터페이스
  */
@@ -30,4 +32,22 @@ public interface MemberMapper {
     void insertMember(Member member);
 
     // 필요에 따라 update, delete 등 추가 메서드 정의 가능
+
+    // 모든멤버 페이지네이션
+    List<Member> selectMembersByPage(
+            @Param("offset") int offset,
+            @Param("limit")  int limit
+    );
+
+    // 전체 멤버 세기
+    int countMembers();
+
+    /** 회원 1명 조회 */
+    Member selectById(@Param("memberId") int memberId);
+
+    /** 회원 정보 수정 */
+    void updateMember(Member member);
+
+    /** 회원 삭제 */
+    void deleteMember(@Param("memberId") int memberId);
 }

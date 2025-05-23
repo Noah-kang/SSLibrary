@@ -1,7 +1,9 @@
 package com.sinsin.ssLibrary.service;
 
 import com.sinsin.ssLibrary.vo.Member;
+import com.sinsin.ssLibrary.vo.Page;
 
+import java.util.List;
 /**
  * 회원 관련 비즈니스 로직 인터페이스
  */
@@ -21,4 +23,16 @@ public interface MemberService {
      * @param member 가입할 회원 정보
      */
     void register(Member member);
+
+    // 회원 조회 페이징
+    Page<Member> getMembersPage(int page, int size);
+
+    // 회원 pk로 가져오기 1명
+    Member     getMemberById(int memberId);
+
+    // 회원정보 수정
+    void       update(Member member);
+
+    // 회원 삭제
+    void       delete(int memberId);
 }
