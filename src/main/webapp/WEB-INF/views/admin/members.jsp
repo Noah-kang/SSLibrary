@@ -86,44 +86,37 @@
             </c:forEach>
             </tbody>
         </table>
-        <%-- 페이지네이션 코드 --%>
+        <%-- 페이지네이션 --%>
         <nav aria-label="Page navigation">
             <ul class="pagination justify-content-center">
-                <%-- 이전 버튼 --%>
+                    <%-- 이전 블록 --%>
                 <c:choose>
-                    <c:when test="${pageData.hasPrevious()}">
+                    <c:when test="${pageData.hasPreviousBlock()}">
                         <li class="page-item">
-                            <a class="page-link"
-                               href="${ctx}/admin/members?page=${pageData.pageNumber-1}">«</a>
+                            <a class="page-link" href="${ctx}/admin/members?page=${pageData.startPage - 1}">&laquo;</a>
                         </li>
                     </c:when>
                     <c:otherwise>
-                        <li class="page-item disabled">
-                            <%-- span 쓰면 클릭 방지 --%>
-                            <span class="page-link">«</span>
-                        </li>
+                        <li class="page-item disabled"><span class="page-link">&laquo;</span></li>
                     </c:otherwise>
                 </c:choose>
 
-                <%-- 페이지 번호 --%>
-                <c:forEach var="p" begin="1" end="${pageData.totalPages}">
+                    <%-- 페이지 번호 --%>
+                <c:forEach var="p" begin="${pageData.startPage}" end="${pageData.endPage}">
                     <li class="page-item ${p == pageData.pageNumber ? 'active' : ''}">
                         <a class="page-link" href="${ctx}/admin/members?page=${p}">${p}</a>
                     </li>
                 </c:forEach>
 
-                <%-- 다음 버튼 --%>
+                    <%-- 다음 블록 --%>
                 <c:choose>
-                    <c:when test="${pageData.hasNext()}">
+                    <c:when test="${pageData.hasNextBlock()}">
                         <li class="page-item">
-                            <a class="page-link"
-                               href="${ctx}/admin/members?page=${pageData.pageNumber+1}">»</a>
+                            <a class="page-link" href="${ctx}/admin/members?page=${pageData.endPage + 1}">&raquo;</a>
                         </li>
                     </c:when>
                     <c:otherwise>
-                        <li class="page-item disabled">
-                            <span class="page-link">»</span>
-                        </li>
+                        <li class="page-item disabled"><span class="page-link">&raquo;</span></li>
                     </c:otherwise>
                 </c:choose>
             </ul>

@@ -38,7 +38,9 @@ public class MemberServiceImpl implements MemberService {
         int total = memberMapper.countMembers();
         int offset = (page - 1) * size;
         List<Member> list = memberMapper.selectMembersByPage(offset, size);
-        return new Page<>(list, page, size, total);
+
+        int blockSize = 10;
+        return new Page<>(list, page, size, total, blockSize);
     }
 
     @Override

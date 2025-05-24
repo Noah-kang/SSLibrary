@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.sinsin.ssLibrary.dao.BookMapper">
+
+    <!-- resultMap -->
+    <resultMap id="bookMap" type="com.sinsin.ssLibrary.vo.Book">
+        <id     column="book_id"    property="bookId"/>
+        <result column="title"      property="title"/>
+        <result column="author"     property="author"/>
+        <result column="location"   property="location"/>
+        <result column="note"       property="note"/>
+        <result column="category1_id" property="category1Id"/>
+        <result column="category2_id" property="category2Id"/>
+    </resultMap>
+
+    <!-- 전체 카운트 -->
+    <select id="countBooks" resultType="int">
+        SELECT COUNT(*) FROM book
+    </select>
+
+    <!-- 페이징 조회 -->
+    <select id="selectByPage" resultMap="bookMap" parameterType="map">
+        SELECT *
+        FROM book
+        ORDER BY book_id DESC
+        LIMIT #{limit} OFFSET #{offset}
+    </select>
+
+    <!-- 단일 조회 -->
+    <select id="selectById" resultMap="bookMap" parameterType="int">
+        SELECT * FROM book WHERE book_id = #{bookId}
+    </select>
+
+    <!-- 등록 -->
+    <insert id="insertBook" parameterType="com.sinsin.ssLibrary.vo.Book" useGeneratedKeys="true" keyProperty="bookId">
+        INSERT INTO book (title, author, location, note, category1_id, category2_id)
+        VALUES (#{title}, #{author}, #{location}, #{note}, #{category1Id}, #{category2Id})
+    </insert>
+
+    <!-- 수정 -->
+    <update id="updateBook" parameterType="com.sinsin.ssLibrary.vo.Book">
+        UPDATE book
+        SET title         = #{title},
+        author        = #{author},
+        location      = #{location},
+        note          = #{note},
+        category1_id  = #{category1Id},
+        category2_id  = #{category2Id}
+        WHERE book_id = #{bookId}
+    </update>
+
+    <!-- 삭제 -->
+    <delete id="deleteBook" parameterType="int">
+        DELETE FROM book WHERE book_id = #{bookId}
+    </delete>
+
+</mapper>

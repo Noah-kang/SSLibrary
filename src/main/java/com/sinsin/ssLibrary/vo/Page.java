@@ -13,15 +13,26 @@ public class Page<T> {
     private final long totalItems;     // 전체 아이템 수
     private final int totalPages;      // 전체 페이지 수
 
+    // 블록(한 번에 보여줄 페이지 버튼 개수)
+    private final int blockSize;
+    private final int startPage;
+    private final int endPage;
+
     /**
      * 생성자: 총 아이템 수를 바탕으로 전체 페이지 수를 계산
      */
-    public Page(List<T> items, int pageNumber, int pageSize, long totalItems) {
+    public Page(List<T> items, int pageNumber, int pageSize, long totalItems, int blockSize) {
         this.items = items;
         this.pageNumber = pageNumber;
         this.pageSize = pageSize;
         this.totalItems = totalItems;
         this.totalPages = (int) ((totalItems + pageSize - 1) / pageSize);
+
+        this.blockSize  = blockSize;
+        int currentBlock = (pageNumber - 1) / blockSize;
+        this.startPage   = currentBlock * blockSize + 1;
+        this.endPage     = Math.min(startPage + blockSize - 1, totalPages);
+
     }
 
     public List<T> getItems() {
@@ -44,6 +55,11 @@ public class Page<T> {
         return totalPages;
     }
 
+    public int    getBlockSize()   { return blockSize; }
+    public int    getStartPage()   { return startPage; }
+    public int    getEndPage()     { return endPage; }
+
+
     /**
      * 이전 페이지가 있는지 여부
      */
@@ -57,4 +73,7 @@ public class Page<T> {
     public boolean hasNext() {
         return pageNumber < totalPages;
     }
+
+    public boolean hasPreviousBlock(){ return startPage > 1; }
+    public boolean hasNextBlock()    { return endPage < totalPages; }
 }

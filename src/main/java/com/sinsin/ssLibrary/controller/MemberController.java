@@ -64,7 +64,7 @@ public class MemberController {
 
         // role에 따른 페이지 이동
         if ("ADMIN".equals(member.getRole())) {
-            return "redirect:/admin/home";
+            return "redirect:/admin/books";   // 기존 /admin/home → /admin/books 로 변경
         } else {
             return "redirect:/user/home";
         }
