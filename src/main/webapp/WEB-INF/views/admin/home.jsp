@@ -11,6 +11,14 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-4Q6Gf2aSP4eDXB8Miphtr37CMZZQ5oXLH2yaXMJ2w8e2ZtHTl7GptT4jmndRuHDT" crossorigin="anonymous">
 </head>
 <body>
+<div class="container mt-4">
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <h2>신신서가 관리자 대시보드</h2>
+    <!-- 로그아웃 버튼 -->
+    <form action="${ctx}/logout" method="post" style="margin:0;">
+        <button type="submit" class="btn btn-outline-secondary">로그아웃</button>
+    </form>
+</div>
 <nav>
     <ul class="nav nav-tabs">
         <li class="nav-item">
@@ -69,7 +77,7 @@
         </c:when>
     </c:choose>
 </div>
-
+</div>
 <!-- Bootstrap CDN JS Bundle -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.6/dist/js/bootstrap.bundle.min.js" integrity="sha384-j1CDi7MgGQ12Z7Qab0qlWQ/Qqz24Gc6BM0thvEMVjHnfYGF0rmFCozFSxQBxwHKO" crossorigin="anonymous"></script>
 </body>

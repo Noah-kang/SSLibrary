@@ -21,12 +21,25 @@ public class BookServiceImpl implements BookService {
 
     @Override
     public Page<Book> getBookPage(int page, int size) {
-        int total = bookMapper.countBooks();
-        int offset = (page - 1) * size;
-        List<Book> list = bookMapper.selectByPage(offset, size);
+        return getBookPage(page, size, null, null);
+    }
 
-        int blockSize = 10;
-        return new Page<>(list, page, size, total, blockSize);
+    @Override
+    public Page<Book> getBookPage(int page, int size, String field, String keyword) {
+        // 파라미터 보정
+        if (keyword != null) keyword = keyword.trim();
+        int total;
+        List<Book> list;
+        if (keyword == null || keyword.isEmpty()) {
+            total = bookMapper.countBooks();
+            int offset = (page - 1) * size;
+            list = bookMapper.selectByPage(offset, size);
+        } else {
+            total = bookMapper.countByCondition(field, keyword);
+            int offset = (page - 1) * size;
+            list = bookMapper.selectByCondition(field, keyword, offset, size);
+        }
+        return new Page<>(list, page, size, total, 10);
     }
 
     @Override

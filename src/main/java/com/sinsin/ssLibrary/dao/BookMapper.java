@@ -11,9 +11,19 @@ public interface BookMapper {
     /** 도서 목록 (페이징 안 할 때) */
     List<Book> selectAll();
 
-    /** 도서 페이징 */
+    /** 검색없는 기존 도서 페이징 */
     List<Book> selectByPage(@Param("offset") int offset, @Param("limit") int limit);
     int countBooks();
+
+    // 검색용 메서드
+    int countByCondition(@Param("field") String field,
+                         @Param("keyword") String keyword);
+    List<Book> selectByCondition(
+            @Param("field") String field,
+            @Param("keyword") String keyword,
+            @Param("offset") int offset,
+            @Param("limit")  int limit
+    );
 
     /** 단일 도서 조회 */
     Book selectById(@Param("bookId") int bookId);

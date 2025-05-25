@@ -14,7 +14,27 @@
         <result column="note"       property="note"/>
         <result column="category1_id" property="category1Id"/>
         <result column="category2_id" property="category2Id"/>
+        <!-- ② category 이름 매핑 -->
+        <result column="c1_name"         property="category1Name"/>
+        <result column="c2_name"         property="category2Name"/>
     </resultMap>
+
+    <!-- 공통 SELECT 절 (필요한 곳마다 아래처럼 고쳐주세요) -->
+    <sql id="bookBase">
+        SELECT
+        b.book_id,
+        b.title,
+        b.author,
+        b.location,
+        b.note,
+        b.category1_id,
+        b.category2_id,
+        p1.name AS c1_name,
+        p2.name AS c2_name
+        FROM book b
+        LEFT JOIN category p1 ON b.category1_id = p1.category_id
+        LEFT JOIN category p2 ON b.category2_id = p2.category_id
+    </sql>
 
     <!-- 전체 카운트 -->
     <select id="countBooks" resultType="int">
@@ -23,9 +43,67 @@
 
     <!-- 페이징 조회 -->
     <select id="selectByPage" resultMap="bookMap" parameterType="map">
-        SELECT *
-        FROM book
+        <include refid="bookBase"/>
         ORDER BY book_id DESC
+        LIMIT #{limit} OFFSET #{offset}
+    </select>
+
+    <!-- 검색용 카운트 -->
+    <select id="countByCondition" resultType="int" parameterType="map">
+        SELECT COUNT(*)
+        FROM book b
+        LEFT JOIN category c1 ON b.category1_id = c1.category_id
+        LEFT JOIN category c2 ON b.category2_id = c2.category_id
+        <where>
+            <if test="keyword!=null and keyword!=''">
+                <choose>
+                    <when test="field=='title'">
+                        AND b.title LIKE CONCAT('%', #{keyword}, '%')
+                    </when>
+                    <when test="field=='author'">
+                        AND b.author LIKE CONCAT('%', #{keyword}, '%')
+                    </when>
+                    <when test="field=='location'">
+                        AND b.location LIKE CONCAT('%', #{keyword}, '%')
+                    </when>
+                    <when test="field=='category'">
+                        AND (
+                        c1.name LIKE CONCAT('%', #{keyword}, '%')
+                        OR c2.name LIKE CONCAT('%', #{keyword}, '%')
+                        )
+                    </when>
+                </choose>
+            </if>
+        </where>
+    </select>
+
+    <!-- 검색 + 페이징 조회 -->
+    <select id="selectByCondition" resultMap="bookMap" parameterType="map">
+        <include refid="bookBase"/>
+        LEFT JOIN category c1 ON b.category1_id = c1.category_id
+        LEFT JOIN category c2 ON b.category2_id = c2.category_id
+        <where>
+            <if test="keyword!=null and keyword!=''">
+                <choose>
+                    <when test="field=='title'">
+                        AND b.title LIKE CONCAT('%', #{keyword}, '%')
+                    </when>
+                    <when test="field=='author'">
+                        AND b.author LIKE CONCAT('%', #{keyword}, '%')
+                    </when>
+                    <when test="field=='location'">
+                        AND b.location LIKE CONCAT('%', #{keyword}, '%')
+                    </when>
+                    <when test="field=='category'">
+                        AND (
+                        c1.name LIKE CONCAT('%', #{keyword}, '%')
+                        OR c2.name LIKE CONCAT('%', #{keyword}, '%')
+                        )
+                    </when>
+                </choose>
+            </if>
+        </where>
+        ORDER BY b.book_id DESC
         LIMIT #{limit} OFFSET #{offset}
     </select>
 

@@ -13,4 +13,7 @@ public class Book {
     private String  note;
     private Integer category1Id;
     private Integer category2Id;
+    // 추가!
+    private String  category1Name;
+    private String  category2Name;
 }

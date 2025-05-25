@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.sinsin.ssLibrary.dao.CategoryMapper">
+
+    <!-- 결과 매핑: parentName 얻기 위해 self join -->
+    <resultMap id="categoryMap" type="com.sinsin.ssLibrary.vo.Category">
+        <id     column="category_id" property="categoryId"/>
+        <result column="name"        property="name"/>
+        <result column="parent_id"   property="parentId"/>
+        <result column="pname"       property="parentName"/>
+    </resultMap>
+
+    <select id="selectAll" resultMap="categoryMap">
+        SELECT c.category_id,
+        c.name,
+        c.parent_id,
+        p.name AS pname
+        FROM category c
+        LEFT JOIN category p ON c.parent_id = p.category_id
+        ORDER BY c.category_id
+    </select>
+
+    <!-- 전체 카테고리 수 -->
+    <select id="countCategories" resultType="int">
+        SELECT COUNT(*) FROM category
+    </select>
+
+    <!-- 페이징 조회 -->
+    <select id="selectByPage" resultMap="categoryMap" parameterType="map">
+        SELECT c.category_id,
+        c.name,
+        c.parent_id,
+        p.name AS pname
+        FROM category c
+        LEFT JOIN category p ON c.parent_id = p.category_id
+        ORDER BY c.category_id DESC
+        LIMIT #{limit} OFFSET #{offset}
+    </select>
+
+    <select id="selectById" resultMap="categoryMap" parameterType="int">
+        SELECT category_id, name, parent_id
+        FROM category
+        WHERE category_id = #{categoryId}
+    </select>
+
+    <insert id="insertCategory" parameterType="com.sinsin.ssLibrary.vo.Category">
+        INSERT INTO category (name, parent_id)
+        VALUES (#{name}, #{parentId})
+    </insert>
+
+    <update id="updateCategory" parameterType="com.sinsin.ssLibrary.vo.Category">
+        UPDATE category
+        SET name      = #{name},
+        parent_id = #{parentId}
+        WHERE category_id = #{categoryId}
+    </update>
+
+    <delete id="deleteCategory" parameterType="int">
+        DELETE FROM category
+        WHERE category_id = #{categoryId}
+    </delete>
+</mapper>
