@@ -52,7 +52,7 @@
     <!-- 모든 회원 조회[페이징] -->
     <select id="selectMembersByPage" resultMap="memberResultMap">
         SELECT * FROM member
-        ORDER BY member_id
+        ORDER BY member_id DESC
         LIMIT #{limit} OFFSET #{offset}
     </select>
 

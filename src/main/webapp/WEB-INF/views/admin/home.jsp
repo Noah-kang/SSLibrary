@@ -35,7 +35,7 @@
         </li>
         <li class="nav-item">
             <a class="nav-link ${activeTab=='wishBooks' ? 'active' : ''}"
-               href="${ctx}/admin/wish-books">희망도서관리</a>
+               href="${ctx}/admin/wishBooks">희망도서관리</a>
         </li>
         <li class="nav-item">
             <a class="nav-link ${activeTab=='reservations' ? 'active' : ''}"

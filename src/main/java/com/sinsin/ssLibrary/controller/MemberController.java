@@ -60,7 +60,7 @@ public class MemberController {
             return "login";
         }
         // 세션에 로그인 회원 정보 저장
-        session.setAttribute("loginMember", member);
+        session.setAttribute("memberId", member.getMemberId());
 
         // role에 따른 페이지 이동
         if ("ADMIN".equals(member.getRole())) {

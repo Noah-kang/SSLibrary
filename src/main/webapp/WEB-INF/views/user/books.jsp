@@ -2,12 +2,8 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <c:set var="ctx" value="${pageContext.request.contextPath}" />
 
-<!-- 제목 -->
-<h3>도서목록</h3>
-
-<!-- 검색 폼 -->
+<%-- 검색 폼 --%>
 <form method="get" action="${ctx}/user/books" class="row g-2 mb-3">
-    <input type="hidden" name="tab" value="books" />
     <div class="col-auto">
         <select name="field" class="form-select">
             <option value="title"    ${field=='title'    ? 'selected':''}>제목</option>
@@ -24,7 +20,7 @@
     </div>
 </form>
 
-<!-- 도서 리스트 -->
+<%-- 도서 리스트 --%>
 <table class="table table-bordered">
     <thead>
     <tr>
@@ -50,14 +46,12 @@
     </tbody>
 </table>
 
-<!-- 페이지네이션 준비 -->
-<c:url var="baseUrl" value="${ctx}/user/books">
-    <c:param name="tab" value="books" />
-</c:url>
+<%-- 페이지네이션 --%>
+<c:url var="baseUrl" value="${ctx}/user/books" />
 <nav aria-label="Page navigation">
     <ul class="pagination justify-content-center">
 
-        <!-- 이전 블록 -->
+        <%-- 이전 블록 --%>
         <c:url var="prevUrl" value="${baseUrl}">
             <c:param name="page" value="${pageData.startPage - 1}" />
             <c:if test="${not empty field}">
@@ -69,7 +63,7 @@
             <a class="page-link" href="${prevUrl}">&laquo;</a>
         </li>
 
-        <!-- 페이지 번호 -->
+        <%-- 페이지 번호 --%>
         <c:forEach var="p" begin="${pageData.startPage}" end="${pageData.endPage}">
             <c:url var="pageUrl" value="${baseUrl}">
                 <c:param name="page" value="${p}" />
@@ -83,7 +77,7 @@
             </li>
         </c:forEach>
 
-        <!-- 다음 블록 -->
+        <%-- 다음 블록 --%>
         <c:url var="nextUrl" value="${baseUrl}">
             <c:param name="page" value="${pageData.endPage + 1}" />
             <c:if test="${not empty field}">
